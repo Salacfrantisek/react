@@ -1,10 +1,15 @@
 import './App.css';
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, createContext, useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "react-bootstrap/Navbar";
 import Header from "./components/Header";
 import Button from "react-bootstrap/Button";
+import RecipeGridList from "./components/layouts/RecipeGridList";
+import UserContext from "./components/AuthProvider";
 
+
+
+//todo odstranit
 const cookbook = {
     name: "Studentská kuchyně"
 };
@@ -252,34 +257,80 @@ const recipeList = [{
 }];
 
 
+//testovaci komponenta
 function MyComponent() {
     return <div>ahoj</div>;
 }
 
 function App() {
-    const App = () => {
-        const myComponentRef = useRef();
-    }
+    //UI consts
+    const [showRecipesBool, setShowRecipes] = useState(false); //render receptu
+    const [DarkSideBool, setDarkSide] = useState(false); //render zabavnych receptu
+    //todo: Tlacitka na navbaru se pridaji az po zvoleni druhu receptu
+    const [navButtons, setNavButtons] = useState(0); //0 - tlacitka neviditelna, 1 - tlacitka viditelna + sipka zpet na volbu druhu receptu
 
+
+    //Consts for server communication
+    const [listRecipeCall, setListRecipeCall] = useState({
+        state: "pending",
+    });
+
+    //Consts for authentication
+    const { toggleAuth, toggleAuthorization } = React.useState(true);
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/recipe/list`, {
+            method: "GET",
+        }).then(async (response) => {
+            const responseJson = await response.json();
+            if (response.status >= 400) {
+                setListRecipeCall({ state: "error", error: responseJson });
+            } else {
+                setListRecipeCall({ state: "success", data: responseJson });
+            }
+        });
+    }, []);
+
+
+    let showRecipes = () => {
+        // Po kliknutí na tlačítko zmeni stav showRecipes na true
+        setShowRecipes(!showRecipesBool);
+        setNavButtons(1);
+    };
+    let showDarkRecipes = () => {
+        setDarkSide(!DarkSideBool);
+        setNavButtons(1);
+    };
+
+
+        //todo:na radku 309 odstranit alert - byl testovaci
         return (
             <div className={"App"}>
+                if (navButtons === 1) {
                 <Navbar fixed="top" expand={"sm"} className="p-4" bg="dark" variant="dark">
                 </Navbar>
-
-
+            }
                 <div style={{margin: 60, marginTop: 100, color: "lightgrey"}}>
                     <Header cookbook={cookbook}/>
                 </div>
                 <div>
-                    <Button variant="primary">🌞 Casual vaření 🌞</Button>
-
+                    <Button variant="primary" onClick={showRecipes}>🌞 Casual vaření 🌞</Button>
+                    {showRecipesBool && <RecipeGridList />}
                 </div>
                 <div style={{marginTop: 25}}>
-                    <Button variant="dark">☠ Let me COOK! ☠</Button>
-
+                    <Button variant="dark" onClick={()=>{ alert(DarkSideBool); showDarkRecipes() }}>☠ Let me COOK! ☠</Button>
+                    {DarkSideBool && <RecipeGridList />}
                 </div>
-
-
+                <br/>
+                <div>
+                    <Button onClick={toggleAuthorization} variant={"success"}>
+                        Kliknutim se prihlaste - takovy zabezpeceni nema ani statni sprava
+                    </Button>
+                </div>
+                <div className="Footer">
+                    ©Nemám rád barvičky a celej frontend
+                </div>
             </div>
         );
 
