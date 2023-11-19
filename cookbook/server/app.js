@@ -1,9 +1,13 @@
 //načtení modulu express
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
+
 
 const recipeRouter = require("./controller/recipe-controller");
 const ingredientRouter = require("./controller/ingredient-controller");
+
+
 
 //inicializace nového Express.js serveru
 const app = express();
@@ -23,10 +27,11 @@ app.get("/", (req, res) => {
 
 app.use("/recipe", recipeRouter);
 app.use("/ingredient", ingredientRouter);
+app.use('/storage', express.static(path.join(__dirname, 'storage')));
 
-app.get("/*", (req, res) => {
+/*app.get("/*", (req, res) => {
   res.send("Unknown path!");
-});
+});*/
 
 //nastavení portu, na kterém má běžet HTTP server
 app.listen(port, () => {

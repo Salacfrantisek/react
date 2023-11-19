@@ -5,7 +5,7 @@ import React from 'react';
 const RecipeGridList = ({ recipes }) => {
     return (
         <div>
-            <h2>Grid View</h2>
+            <h2>Recepty v mřížce?!</h2>
             {/* Vykreslení receptů v mřížce */}
             <div className="grid-container">
                 {recipes.map((recipe) => (

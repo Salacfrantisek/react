@@ -6,8 +6,21 @@ import Header from "./components/Header";
 import Button from "react-bootstrap/Button";
 import RecipeGridList from "./components/layouts/RecipeGridList";
 import RecipeTableList from "./components/layouts/RecipeTableList";
+import FunRecipeList from "./components/layouts/FunRecipeList";
 import UserContext from "./components/AuthProvider";
+import styled from 'styled-components';
+import { moveUp } from './components/style/TransitionStyles';
+import './style/css/initialLoadStyle.css';
+import { CSSTransition } from 'react-transition-group';
 
+
+const HeaderWrapper = styled.div`
+  animation: ${moveUp} 0.5s ease; // Použití animace
+`;
+
+//todo: Zde nastavit animace jiz pri prvni inicializaci stranky
+const FirstLoad = () => React.useState(true);
+const SecondLoad = true;
 
 
 
@@ -270,21 +283,7 @@ function App() {
     const [DarkSideBool, setDarkSide] = useState(false); //render zabavnych receptu
     //todo: Tlacitka na navbaru se pridaji az po zvoleni druhu receptu
     const [navButtons, setNavButtons] = useState(0); //0 - tlacitka neviditelna, 1 - tlacitka viditelna + sipka zpet na volbu druhu receptu
-
-
-    //Consts for server communication
-    const [listRecipeCall, setListRecipeCall] = useState({
-        state: "pending",
-    });
-
-    //tlacitko pro zobrazeni vanilla receptu
-    const toggleView = () => {
-    setShowRecipes(!showRecipesBool);
-    //setShowRecipes((showRecipesBool) => !showRecipesBool);
-    }
-
-    //Consts for authentication
-    const { toggleAuth, toggleAuthorization } = React.useState(true);
+    const [inProp, setInProp] = useState(true); //animace postupneho zviditelneni stranky
 
 
     useEffect(() => {
@@ -301,6 +300,14 @@ function App() {
     }, []);
 
 
+    //Consts for server communication
+    const [listRecipeCall, setListRecipeCall] = useState({
+        state: "pending",
+    });
+
+    //Consts for authentication
+    let { toggleAuth, toggleAuthorization } = React.useState(true);
+
     let showRecipes = () => {
         // Po kliknutí na tlačítko zmeni stav showRecipes na true
         setShowRecipes(!showRecipesBool);
@@ -312,35 +319,46 @@ function App() {
     };
 
 
-        //todo:na radku 309 odstranit alert - byl testovaci
+        //todo: odstranit alert u napalmu - byl testovaci
         return (
+            <CSSTransition
+                in={inProp}
+                timeout={500}
+                classNames="fade"
+                unmountOnExit
+            >
             <div className={"App"}>
                 if (navButtons === 1) {
                 <Navbar fixed="top" expand={"sm"} className="p-4" bg="dark" variant="dark">
                 </Navbar>
             }
+                <HeaderWrapper>
                 <div style={{margin: 60, marginTop: 100, color: "lightgrey"}}>
                     <Header cookbook={cookbook}/>
                 </div>
+                    </HeaderWrapper>
                 <div>
-                    <Button variant="primary" onClick={toggleView}>🌞 Casual vaření 🌞</Button>
+                    <Button variant="primary" onClick={showRecipes}>🌞 Casual vaření 🌞</Button>
                     {showRecipesBool && <RecipeGridList recipes={recipeList}/>}
 
                 </div>
                 <div style={{marginTop: 25}}>
-                    <Button variant="dark" onClick={()=>{ alert(DarkSideBool); showDarkRecipes() }}>☠ Let me COOK! ☠</Button>
-                    {DarkSideBool && <RecipeGridList />}
+                    <Button variant="dark" onClick={()=>{showDarkRecipes() }}>☠ Let me COOK! ☠</Button>
+                    {DarkSideBool && <FunRecipeList/>}
                 </div>
                 <br/>
+
                 <div>
                     <Button onClick={toggleAuthorization} variant={"success"}>
-                        Kliknutim se prihlaste - takovy zabezpeceni nema ani statni sprava
+                        <button onClick={() =>  alert("\nReference na Breaking bad")}>🔥Napalm 🔥</button>
+                        Click here to become superuser - takovy zabezpeceni nema ani statni sprava
                     </Button>
                 </div>
                 <div className="Footer">
                     ©Nemám rád barvičky a celej frontend
                 </div>
             </div>
+            </CSSTransition>
         );
 
 }
