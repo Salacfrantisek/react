@@ -5,7 +5,9 @@ import Navbar from "react-bootstrap/Navbar";
 import Header from "./components/Header";
 import Button from "react-bootstrap/Button";
 import RecipeGridList from "./components/layouts/RecipeGridList";
+import RecipeTableList from "./components/layouts/RecipeTableList";
 import UserContext from "./components/AuthProvider";
+
 
 
 
@@ -275,6 +277,12 @@ function App() {
         state: "pending",
     });
 
+    //tlacitko pro zobrazeni vanilla receptu
+    const toggleView = () => {
+    setShowRecipes(!showRecipesBool);
+    //setShowRecipes((showRecipesBool) => !showRecipesBool);
+    }
+
     //Consts for authentication
     const { toggleAuth, toggleAuthorization } = React.useState(true);
 
@@ -315,8 +323,9 @@ function App() {
                     <Header cookbook={cookbook}/>
                 </div>
                 <div>
-                    <Button variant="primary" onClick={showRecipes}>🌞 Casual vaření 🌞</Button>
-                    {showRecipesBool && <RecipeGridList />}
+                    <Button variant="primary" onClick={toggleView}>🌞 Casual vaření 🌞</Button>
+                    {showRecipesBool && <RecipeGridList recipes={recipeList}/>}
+
                 </div>
                 <div style={{marginTop: 25}}>
                     <Button variant="dark" onClick={()=>{ alert(DarkSideBool); showDarkRecipes() }}>☠ Let me COOK! ☠</Button>

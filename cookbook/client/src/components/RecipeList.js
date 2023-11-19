@@ -3,7 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Icon from "@mdi/react";
 import { mdiTable, mdiViewGridOutline } from "@mdi/js";
-import RecipeGridList from "./layouts/RecipeGridList"//"./RecipeGridList";
+import RecipeGridList from "./layouts/DeprecatedRecipeGridList"//"./RecipeGridList";
 
 function RecipeList(props) {
 

@@ -1,19 +1,30 @@
-import React from "react";
-import Recipe from "./Recipe";
+import React from 'react';
 
-function RecipeGridList(props) {
+const RecipeTableList = ({ recipes }) => {
+    return (
+        <div>
+            <h2>Table View</h2>
+            {/* Vykreslení receptů v seznamu */}
+            <table>
+                <thead>
+                <tr>
+                    <th>Název</th>
+                    <th>Popis</th>
+                    {/* Další záhlaví */}
+                </tr>
+                </thead>
+                <tbody>
+                {recipes.map((recipe) => (
+                    <tr key={recipe.name}>
+                        <td>{recipe.name}</td>
+                        <td>{recipe.description}</td>
+                        {/* Další informace o receptu */}
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
 
-    //todo: add card styling
-    /*
-
-     */
-
-    function RecipeCardList(props) {
-        return props.recipeList.map((recipe) => {
-            return <Recipe key={recipe.id} student={recipe} />;
-        });
-    }
-
-}
-
-export default RecipeGridList;
+export default RecipeTableList;

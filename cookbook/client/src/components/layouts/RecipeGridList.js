@@ -1,19 +1,23 @@
-import React from "react";
-import Recipe from "../Recipe";
+import React from 'react';
 
-function RecipeGridList(props) {
 
-    //todo: add card styling
-    /*
 
-     */
-
-    function RecipeGridList(props) {
-        return props.recipeList.map((recipe) => {
-            return <Recipe key={recipe.id} student={recipe}/>;
-        });
-    }
-
-}
+const RecipeGridList = ({ recipes }) => {
+    return (
+        <div>
+            <h2>Grid View</h2>
+            {/* Vykreslení receptů v mřížce */}
+            <div className="grid-container">
+                {recipes.map((recipe) => (
+                    <div key={recipe.name} className="recipe-item">
+                        <img src={recipe.imgUri} alt={recipe.name} />
+                        <h3>{recipe.name}</h3>
+                        {/* Další informace o receptu */}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
 
 export default RecipeGridList;
