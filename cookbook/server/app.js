@@ -2,7 +2,9 @@
 const express = require("express");
 const cors = require("cors");
 const path = require('path');
-
+//načtení modulu mysql, bude vyuzivat take express
+const bodyParser = require('body-parser');
+const db = require('./script/db');
 
 const recipeRouter = require("./controller/recipe-controller");
 const ingredientRouter = require("./controller/ingredient-controller");
