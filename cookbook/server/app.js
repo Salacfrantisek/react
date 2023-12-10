@@ -39,3 +39,18 @@ app.use('/storage', express.static(path.join(__dirname, 'storage')));
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+
+app.use(bodyParser.json());
+
+//Čtení receptů z databáze
+app.get('/recipes', (req, res) => {
+  db.query('SELECT * FROM cookbook_json_to_sql', (err, results) => {
+    if (err) {
+      console.error('Chyba při čtení z databáze: ', err);
+      res.status(500).send('Chyba při čtení z databáze.');
+    } else {
+      res.json(results);
+    }
+  });
+});

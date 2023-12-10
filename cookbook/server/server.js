@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const db = require('./script/db');
 
 const app = express();
-const port = 8000;
+const port = 8001;
 
 app.use(bodyParser.json());
 
@@ -15,6 +15,7 @@ app.get('/recipes', (req, res) => {
             res.status(500).send('Chyba při čtení z databáze.');
         } else {
             res.json(results);
+            console.log('Data: ', results);
         }
     });
 });
