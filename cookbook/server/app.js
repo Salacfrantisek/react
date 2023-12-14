@@ -44,7 +44,7 @@ app.listen(port, () => {
 app.use(bodyParser.json());
 
 //Čtení receptů z databáze
-app.get('/recipes', (req, res) => {
+app.get('/recipes-sql', (req, res) => {
   db.query('SELECT * FROM cookbook_json_to_sql', (err, results) => {
     if (err) {
       console.error('Chyba při čtení z databáze: ', err);

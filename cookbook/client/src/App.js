@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { moveUp } from './components/style/TransitionStyles';
 import './style/css/initialLoadStyle.css';
 import { CSSTransition } from 'react-transition-group';
+import Switch from "./components/ui/Switch";
 
 
 const HeaderWrapper = styled.div`
@@ -272,11 +273,6 @@ const recipeList = [{
 }];
 
 
-//testovaci komponenta
-function MyComponent() {
-    return <div>ahoj</div>;
-}
-
 function App() {
     //UI consts
     const [showRecipesBool, setShowRecipes] = useState(false); //render receptu
@@ -284,8 +280,11 @@ function App() {
     //todo: Tlacitka na navbaru se pridaji az po zvoleni druhu receptu
     const [navButtons, setNavButtons] = useState(0); //0 - tlacitka neviditelna, 1 - tlacitka viditelna + sipka zpet na volbu druhu receptu
     const [inProp, setInProp] = useState(true); //animace postupneho zviditelneni stranky
+    const [isSwitchOn, setIsSwitchOn] = useState(false);
 
+    const [data, setData] = useState([]);
 
+    /*
     useEffect(() => {
         fetch(`http://localhost:3000/recipe/list`, {
             method: "GET",
@@ -299,66 +298,109 @@ function App() {
         });
     }, []);
 
-
-    //Consts for server communication
-    const [listRecipeCall, setListRecipeCall] = useState({
-        state: "pending",
-    });
-
-    //Consts for authentication
-    let { toggleAuth, toggleAuthorization } = React.useState(true);
-
-    let showRecipes = () => {
-        // Po kliknutí na tlačítko zmeni stav showRecipes na true
-        setShowRecipes(!showRecipesBool);
-        setNavButtons(1);
-    };
-    let showDarkRecipes = () => {
-        setDarkSide(!DarkSideBool);
-        setNavButtons(1);
-    };
-
-
-        //todo: odstranit alert u napalmu - byl testovaci
-        return (
-            <CSSTransition
-                in={inProp}
-                timeout={500}
-                classNames="fade"
-                unmountOnExit
-            >
-            <div className={"App"}>
-                if (navButtons === 1) {
-                <Navbar fixed="top" expand={"sm"} className="p-4" bg="dark" variant="dark">
-                </Navbar>
+*/
+/** fetch dat ze serveru
+ * Pri zapnutem switchi, tedy nasem isSwitchOn, se data nacitaji z databaze
+ * Pri vypnutem switchi se data nacitaji ze souboru na serveru
+ */
+useEffect(() => {
+    const fetchData = async () => {
+        try {
+            if (isSwitchOn) {
+                // Fetchování dat z databáze (simulace)
+                const response = await fetch('/api/getDataFromDatabase');
+                const databaseData = await response.json();
+                setData(databaseData);
+            } else {
+                // Fetchování dat ze souboru na serveru
+                const response = await fetch('/server/storage/recipes.json');
+                const fileData = await response.json();
+                setData(fileData);
             }
-                <HeaderWrapper>
+        } catch (error) {
+            console.error('Chyba při načítání dat:', error);
+        }
+    };
+
+    fetchData();
+}, [isSwitchOn]);
+
+
+
+
+
+//Consts for server communication
+const [listRecipeCall, setListRecipeCall] = useState({
+    state: "pending",
+});
+
+//Consts for authentication
+let { toggleAuth, toggleAuthorization } = React.useState(true);
+
+let showRecipes = () => {
+    // Po kliknutí na tlačítko zmeni stav showRecipes na true
+    setShowRecipes(!showRecipesBool);
+    setNavButtons(1);
+};
+let showDarkRecipes = () => {
+    setDarkSide(!DarkSideBool);
+    setNavButtons(1);
+};
+
+
+//todo: odstranit alert u napalmu - byl testovaci
+const handleSwitchToggle = (isActive) => {
+    setIsSwitchOn(isActive);
+    console.log(isSwitchOn);
+};
+
+
+return (
+    <CSSTransition
+        in={inProp}
+        timeout={500}
+        classNames="fade"
+        unmountOnExit
+    >
+        <div className={"App"}>
+            if (navButtons === 1) {
+            <Navbar fixed="top" expand={"sm"} className="p-4" bg="dark" variant="dark">
+                <Switch onToogleSwitch ={handleSwitchToggle}/>
+                <p style={{color: 'white', marginLeft: 50, marginTop: 20}}>Čerpání dat z lokální
+                    databáze</p>
+            </Navbar>
+        }
+            <HeaderWrapper>
                 <div style={{margin: 60, marginTop: 100, color: "lightgrey"}}>
                     <Header cookbook={cookbook}/>
                 </div>
-                    </HeaderWrapper>
-                <div>
-                    <Button variant="primary" onClick={showRecipes}>🌞 Casual vaření 🌞</Button>
-                    {showRecipesBool && <RecipeGridList recipes={recipeList}/>}
+            </HeaderWrapper>
+            <div>
+                <Button variant="primary" onClick={showRecipes}>🌞 Casual vaření 🌞</Button>
+                {showRecipesBool && <RecipeGridList recipes={recipeList}/>}
 
-                </div>
-                <div style={{marginTop: 25}}>
-                    <Button variant="dark" onClick={()=>{showDarkRecipes() }}>☠ Let me COOK! ☠</Button>
-                    {DarkSideBool && <FunRecipeList/>}
-                </div>
-                <br/>
-
-                <div>
-                    <Button onClick={toggleAuthorization} variant={"success"}>
-                        <button onClick={() =>  alert("\nReference na Breaking bad")}>🔥Napalm 🔥</button>
-                        Click here to become superuser - takovy zabezpeceni nema ani statni sprava
-                    </Button>
-                </div>
-                <div className="Footer">
-                    ©Nemám rád barvičky a celej frontend
-                </div>
             </div>
-            </CSSTransition>
+            <div style={{marginTop: 25}}>
+                <Button variant="dark" onClick={() => {
+                    showDarkRecipes()
+                }}>☠ Let me COOK! ☠</Button>
+                {DarkSideBool && <FunRecipeList/>}
+            </div>
+            <br/>
+
+            <div>
+                <Button onClick={toggleAuthorization} variant={"success"}>
+                    <button onClick={() => alert("\nReference na Breaking bad")}>🔥Napalm 🔥</button>
+                    Click here to become superuser - takovy zabezpeceni nema ani statni sprava
+                </Button>
+            </div>
+            <div className="Footer">
+                ©Nemám rád barvičky a celej frontend
+            </div>
+        </div>
+
+
+    </CSSTransition>
         );
 
 }

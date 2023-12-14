@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Icon from "@mdi/react";
@@ -8,6 +8,18 @@ import RecipeGridList from "./layouts/DeprecatedRecipeGridList"//"./RecipeGridLi
 function RecipeList(props) {
 
 
+    const filteredRecipeList = useMemo(() => {
+        return props.recipeList.filter((item) => {
+            return (
+                item.name
+                    .toLocaleLowerCase()
+                    .includes(searchBy.toLocaleLowerCase()) ||
+                item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
+            );
+        });
+    }, [searchBy, props.recipeList]);
+
+    /*
     const [viewType, setViewType] = useState("grid");
     const isGrid = viewType === "grid";
 
@@ -46,5 +58,6 @@ export default RecipeList;
         });
     }
     return getRecipeList(props.recipeList);
+*/
+
 }
- */
