@@ -327,9 +327,6 @@ useEffect(() => {
 }, [isSwitchOn]);
 
 
-
-
-
 //Consts for server communication
 const [listRecipeCall, setListRecipeCall] = useState({
     state: "pending",
@@ -364,15 +361,16 @@ return (
         unmountOnExit
     >
         <div className={"App"}>
+            <div className={"Container"}>
             if (navButtons === 1) {
             <Navbar fixed="top" expand={"sm"} className="p-4" bg="dark" variant="dark">
                 <Switch onToogleSwitch ={handleSwitchToggle}/>
-                <p style={{color: 'white', marginLeft: 50, marginTop: 20}}>Čerpání dat z lokální
+                <p style={{color: 'white', marginLeft: 50, marginTop: 5}}>Čerpání dat z lokální
                     databáze</p>
             </Navbar>
         }
             <HeaderWrapper>
-                <div style={{margin: 60, marginTop: 100, color: "lightgrey"}}>
+                <div style={{margin: 60, marginTop: 85, color: "lightgrey"}}>
                     <Header cookbook={cookbook}/>
                 </div>
             </HeaderWrapper>
@@ -398,6 +396,7 @@ return (
             </div>
             <div className="Footer">
                 ©Nemám rád barvičky a celej frontend
+            </div>
             </div>
         </div>
 

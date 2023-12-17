@@ -1,0 +1,32 @@
+
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.recipe-grid-item {
+    cursor: pointer;
+    text-align: center;
+}
+
+.recipe-grid-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.ReactModal__Overlay--after-open {
+    opacity: 95%;
+    background-color: rgba(0, 0, 0, 50);
+    max-width: 75%;
+    max-height: 70%;
+    margin: auto;
+    z-index: 1000; /* Přidáno, upravte podle potřeby */
+    padding: 80px;
+}
+
+.ReactModal__Overlay--before-close {
+    opacity: 0;
+}
