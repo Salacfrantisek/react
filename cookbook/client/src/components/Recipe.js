@@ -1,16 +1,30 @@
-import React from "react";
-import styles from "../style/css/recipe.module.css";
-import Card from 'react-bootstrap/Card';
+import React, { useState } from 'react';
 
-function Recipe(props) {
+const Recipe = ({ recipe }) => {
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleEdit = () => {
+        setIsEditing(true);
+    };
+
+    const handleSave = () => {
+        // Implementujte logiku pro uložení změn na serveru
+        // Poté přepněte zpět do režimu zobrazení
+        setIsEditing(false);
+    };
+
     return (
-        <Card className={styles.recipe} key={props.recipe.id}>
-            <Card.Img variant="top" src={props.recipe.imgUri} width="400px" height="200px" />
-            <Card.Body>
-                <Card.Title>{props.recipe.name}</Card.Title>
-                <Card.Text>{props.recipe.description}</Card.Text>
-            </Card.Body>
-        </Card>
-    )
-}
+        <div>
+            <h3>{isEditing ? <input type="text" value={recipe.name} /> : recipe.name}</h3>
+            <p>{isEditing ? <textarea value={recipe.description} /> : recipe.description}</p>
+            {/* Další informace o receptu */}
+            {isEditing ? (
+                <button onClick={handleSave}>Uložit</button>
+            ) : (
+                <button onClick={handleEdit}>Upravit</button>
+            )}
+        </div>
+    );
+};
+
 export default Recipe;
