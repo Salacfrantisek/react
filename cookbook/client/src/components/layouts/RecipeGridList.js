@@ -47,6 +47,7 @@ const RecipeGridList = ({ recipes }) => {
                 console.log('Recept byl úspěšně aktualizován.');
                 setIsEditing(false);
                 closeModal();
+                window.location.reload();
                 // Aktualizace seznamu receptů nebo dalších částí UI po úspěšné aktualizaci
             } else {
                 console.error('Chyba při aktualizaci receptu:', response.status);
