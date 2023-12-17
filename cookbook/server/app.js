@@ -20,7 +20,7 @@ const port = process.env.PORT || 8000;
 app.use(express.json()); // podpora pro application/json
 app.use(express.urlencoded({ extended: true })); // podpora pro application/x-www-form-urlencoded
 
-app.use(cors())
+app.use(cors()) //CORS - Cross Origin Resource Sharing
 
 //jednoduchá definice routy s HTTP metodou GET, která pouze navrací text
 app.get("/", (req, res) => {
@@ -51,6 +51,33 @@ app.get('/recipes-sql', (req, res) => {
       res.status(500).send('Chyba při čtení z databáze.');
     } else {
       res.json(results);
+    }
+  });
+});
+
+// Simulovaná databáze
+/*
+const databaseData = [
+  { name: 'Jídlo 1', description: 'Popis jídla 1', ingredients: [] },
+  { name: 'Jídlo 2', description: 'Popis jídla 2', ingredients: [] },
+  // Další data z databáze
+]; */
+
+// Endpoint pro získání dat ze souboru na serveru
+app.get('/api/getDataFromFile', (req, res) => {
+  const fileData = require('./storage/recipes.json');
+  res.json(fileData);
+});
+
+// Endpoint pro získání dat z databáze
+app.get('/api/getDataFromDatabase', (req, res) => {
+  db.query('SELECT * FROM cookbook_json_to_sql', (err, results) => {
+    if (err && !results.isNull()) {
+      console.error('Chyba při čtení z databáze: ', err);
+      res.status(500).send('Chyba při čtení z databáze.');
+    } else {
+      res.json(results);
+      console.log('Data: ', results);
     }
   });
 });

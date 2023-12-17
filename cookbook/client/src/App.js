@@ -15,6 +15,7 @@ import { CSSTransition } from 'react-transition-group';
 import Switch from "./components/ui/Switch";
 
 
+
 const HeaderWrapper = styled.div`
   animation: ${moveUp} 0.5s ease; // Použití animace
 `;
@@ -30,7 +31,7 @@ const cookbook = {
     name: "Studentská kuchyně"
 };
 
-const recipeList = [{
+const mockRecipeList = [{
     "name": "Salát z naklíčené čočky",
     "description": "Mrkev, okurku a papriku nakrájejte na malé kostičky a dejte do větší mísy spolu s naklíčenou čočkou. Cibuli nakrájejte najemno a přidejte k zelenině. Přisypte nasekanou petrželku. V misce nebo hrníčku důkladně promíchejte lák z okurek, olivový olej a med. Zálivku nalijte do mísy a důkladně promíchejte. Na závěr dochuťte solí a pepřem.",
     "imgUri": "https://zachranjidlo.cz/wp-content/uploads/dsc02309-1-e1652694711486-1024x433-1200x500-c-default.jpg",
@@ -282,7 +283,7 @@ function App() {
     const [inProp, setInProp] = useState(true); //animace postupneho zviditelneni stranky
     const [isSwitchOn, setIsSwitchOn] = useState(false);
 
-    const [data, setData] = useState([]);
+    const [recipeList, setData] = useState([]);
 
     /*
     useEffect(() => {
@@ -308,12 +309,12 @@ useEffect(() => {
         try {
             if (isSwitchOn) {
                 // Fetchování dat z databáze (simulace)
-                const response = await fetch('/api/getDataFromDatabase');
+                const response = await fetch('/api/getDataFromDatabase'); //todo momentálně nefunkční - hlavní je dodělat načítání z JSONu
                 const databaseData = await response.json();
                 setData(databaseData);
             } else {
                 // Fetchování dat ze souboru na serveru
-                const response = await fetch('/server/storage/recipes.json');
+                const response = await fetch('http://localhost:8000/storage/recipes.json');
                 const fileData = await response.json();
                 setData(fileData);
             }
@@ -377,7 +378,8 @@ return (
             </HeaderWrapper>
             <div>
                 <Button variant="primary" onClick={showRecipes}>🌞 Casual vaření 🌞</Button>
-                {showRecipesBool && <RecipeGridList recipes={recipeList}/>}
+                {showRecipesBool && recipeList != null && <RecipeGridList recipes={recipeList}/>}
+                
 
             </div>
             <div style={{marginTop: 25}}>
